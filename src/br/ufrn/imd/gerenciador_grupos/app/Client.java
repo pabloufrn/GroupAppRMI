@@ -14,8 +14,10 @@ public class Client {
         try {
             Registry registry = LocateRegistry.getRegistry(host);
             GerenciadorGrupos stub = (GerenciadorGrupos) registry.lookup("GerenciadorGrupos");
-            String response = stub.cadastrarGrupo();
-            System.out.println("response: " + response);
+            boolean response = stub.cadastrarGrupo("Teste");
+            System.out.println("response: " + (response ? "yes":"no"));
+            response = stub.cadastrarGrupo("Teste");
+            System.out.println("response: " + (response ? "yes":"no"));
         } catch (Exception e) {
             System.err.println("Client exception: " + e.toString());
             e.printStackTrace();
