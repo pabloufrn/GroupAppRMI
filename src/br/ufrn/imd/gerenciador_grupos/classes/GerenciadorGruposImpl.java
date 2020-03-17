@@ -31,7 +31,7 @@ public class GerenciadorGruposImpl implements GerenciadorGrupos {
         grupos.add(nomeGrupo);
         mensagens.put(nomeGrupo, new ArrayList<String>());
         pessoas.put(nomeCliente, new ArrayList<String>());
-        this.mandarMensagem(nomeGrupo, nomeCliente, "Grupo " + nomeGrupo + " criado com sucesso.");
+        this.mandarMensagem(nomeGrupo, "Grupo " + nomeGrupo + " criado com sucesso.");
         this.entrarGrupo(nomeGrupo, nomeCliente);
         return true;
     }
