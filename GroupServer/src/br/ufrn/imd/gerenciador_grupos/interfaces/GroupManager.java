@@ -8,5 +8,4 @@ public interface GroupManager extends Remote {
     boolean cadastrarGrupo(String nomeGrupo, String nomeCliente) throws RemoteException;
     boolean entrarGrupo(String nomeGrupo, String nomeCliente) throws RemoteException;
     boolean sairGrupo(String nomeGrupo) throws RemoteException;
-    boolean mandarMensagem(String nomeGrupo, String mensagem) throws RemoteException;
 }

@@ -22,6 +22,9 @@ public class Server extends UnicastRemoteObject {
             LocateRegistry.createRegistry(1099);
             Naming.rebind("//192.168.11.6/GerenciadorGrupos", skeleton);
             System.err.println("Server ready");
+
+            Thread thread = new MessageSenderThread(gerenciadorGrupos);
+            thread.start();
 	    } catch (Exception e){
 	        System.err.println("Server exception: " + e.toString());
 	        e.printStackTrace();

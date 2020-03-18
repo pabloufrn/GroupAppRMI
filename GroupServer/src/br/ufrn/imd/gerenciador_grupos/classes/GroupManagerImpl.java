@@ -23,7 +23,6 @@ public class GroupManagerImpl implements GroupManager {
     @Override
     public void register(User user) throws RemoteException {
         users.put(user.getName(), user);
-        user.test();
     }
 
     @Override
@@ -32,9 +31,11 @@ public class GroupManagerImpl implements GroupManager {
             return false;
         }
 
-        groups.put(nomeGrupo, new Group(nomeGrupo));
+        Group group = new Group(nomeGrupo);
+        groups.put(nomeGrupo, group);
+        System.out.println("Grupo " + nomeGrupo + " criado com sucesso.");
         this.entrarGrupo(nomeGrupo, nomeCliente);
-        this.mandarMensagem(nomeGrupo, "Grupo " + nomeGrupo + " criado com sucesso.");
+        group.addMessage("Grupo " + nomeGrupo + " criado com sucesso.");
 
         return true;
     }
@@ -50,8 +51,9 @@ public class GroupManagerImpl implements GroupManager {
 
         group.addUser(users.get(nomeCliente));
         group.addMessage(nomeCliente + " entrou no grupo");
+        System.out.println(nomeCliente + " entrou no grupo");
 
-        return false;
+        return true;
     }
 
     @Override
@@ -59,12 +61,18 @@ public class GroupManagerImpl implements GroupManager {
         return false;
     }
 
-    @Override
-    public boolean mandarMensagem(String nomeGrupo, String mensagem) throws RemoteException {
-        /** todo
-         * Obter nome do cliente pelo endereço
-         * Mandar rmi para todos os clientes conectados
-         */
-        return false;
+    public void update() throws RemoteException {
+        for(Group group: groups.values()){
+            int size = group.getMessages().size();
+            Integer firsNotSentMsg = group.getFirsNotSentMsg();
+            while(firsNotSentMsg < size){
+                for(User user: group.getUsers().values()){
+                    System.out.println("Sending to:" + user.getName());
+                    user.sendMessage(group.getMessages().get(firsNotSentMsg));
+                }
+                firsNotSentMsg ++;
+            }
+            group.setFirsNotSentMsg(firsNotSentMsg);
+        }
     }
 }

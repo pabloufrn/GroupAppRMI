@@ -19,8 +19,7 @@ public class UserImpl extends UnicastRemoteObject implements User {
     }
 
     @Override
-    public void test() {
-        //Essa mensagem deve aparecer no cliente
-        System.out.println("Teste - Hello!");
+    public void sendMessage(String msg) throws RemoteException {
+        System.out.println(msg);
     }
 }

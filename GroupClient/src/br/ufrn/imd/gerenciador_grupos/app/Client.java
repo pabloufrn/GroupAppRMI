@@ -19,11 +19,8 @@ public class Client extends UnicastRemoteObject {
         try {
             GroupManager stub = (GroupManager) Naming.lookup("//localhost/GerenciadorGrupos");
             User user = new UserImpl("Fulano");
-            //User user = new User
             stub.register(user);
-            boolean response = stub.cadastrarGrupo("Teste","");
-            System.out.println("response: " + (response ? "yes":"no"));
-            response = stub.cadastrarGrupo("Teste","");
+            boolean response = stub.cadastrarGrupo("Teste",user.getName());
             System.out.println("response: " + (response ? "yes":"no"));
         } catch (Exception e) {
             System.err.println("Client exception: " + e.toString());

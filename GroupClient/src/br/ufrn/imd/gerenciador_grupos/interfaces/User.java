@@ -8,5 +8,5 @@ public interface User extends Remote, Serializable {
 
     String getName() throws RemoteException;
 
-    void test() throws RemoteException;
+    void sendMessage(String msg) throws RemoteException;
 }

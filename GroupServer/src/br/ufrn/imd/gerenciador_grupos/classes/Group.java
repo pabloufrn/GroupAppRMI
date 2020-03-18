@@ -9,11 +9,13 @@ public class Group {
     private String name;
     private Map<String, User> users;
     private List<String> messages;
+    private Integer firsNotSentMsg;
 
     public Group(String name){
         this.name = name;
         this.users = new HashMap<>();
         this.messages = new LinkedList<>();
+        this.firsNotSentMsg = 0;
     }
 
     public void addUser(User user) throws RemoteException {
@@ -40,4 +42,11 @@ public class Group {
         return name;
     }
 
+    public Integer getFirsNotSentMsg() {
+        return firsNotSentMsg;
+    }
+
+    public void setFirsNotSentMsg(Integer firsNotSentMsg) {
+        this.firsNotSentMsg = firsNotSentMsg;
+    }
 }
