@@ -7,12 +7,14 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Server implements ServerRemote {
 
 //    ClientRemote client;
     List<ClientRemote> clients;
-
+    List<Group> groups;
 
     public Server() throws RemoteException {
         UnicastRemoteObject.exportObject(this, 1010);
@@ -21,12 +23,6 @@ public class Server implements ServerRemote {
 
     @Override
     public void registerClient(ClientRemote client) throws RemoteException {
-        /*
-        if(this.client != null){
-            this.client.doSomething();
-        }
-        this.client = client;
-         */
         this.clients.add(client);
         this.clients.forEach(clientRemote -> {
             try {
@@ -36,4 +32,12 @@ public class Server implements ServerRemote {
             }
         });
     }
+
+    @Override
+    public List<Map.Entry<String, String>> listGroups() throws RemoteException {
+        return groups.stream().map(group ->
+                Map.entry("fwef", "fwefw")).collect(Collectors.toList());
+    }
+
+
 }
