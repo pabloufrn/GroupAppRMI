@@ -3,20 +3,17 @@ package br.imd.ufrn.TwoClients.client.controllers;
 import br.imd.ufrn.TwoClients.client.interfaces.ClientRemote;
 import br.imd.ufrn.TwoClients.client.views.ChatWindow;
 
-import javax.swing.*;
+import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
 public class Client implements ClientRemote {
 
     private ChatWindow window;
+    private String name;
 
     public Client(ChatWindow window) {
         this.window = window;
         this.exportService();
-    }
-    @Override
-    public void doSomething() {
-        window.writeChatMsg("Alguém entrou no servidor");
     }
 
     private void exportService() {
@@ -34,5 +31,15 @@ public class Client implements ClientRemote {
             }
             port +=1;
         }
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public void receiveMessage(String message) throws RemoteException {
+        window.writeChatMsg(message);
     }
 }

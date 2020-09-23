@@ -2,6 +2,7 @@ package br.imd.ufrn.TwoClients.client;
 
 import br.imd.ufrn.TwoClients.client.controllers.Client;
 import br.imd.ufrn.TwoClients.client.views.ChatWindow;
+import br.imd.ufrn.TwoClients.server.interfaces.ClientGroup;
 import br.imd.ufrn.TwoClients.server.interfaces.ServerRemote;
 
 import java.net.MalformedURLException;
@@ -16,15 +17,16 @@ import java.rmi.registry.Registry;
 
 public class Main {
     public static void main(String[] args) throws RemoteException, NotBoundException, MalformedURLException {
-
+        System.setProperty("java.rmi.server.hostname","25.6.51.213");
 
         try{
-            Registry registry = LocateRegistry.getRegistry(1010);
+            Registry registry = LocateRegistry.getRegistry("25.97.85.1", 1010);
             ServerRemote stub = (ServerRemote) registry.lookup("MyServer");
-            ChatWindow chatWindow = new ChatWindow("Multichat");
+            ChatWindow chatWindow = new ChatWindow("Multichat", stub);
             chatWindow.setVisible(true);
             Client client = new Client(chatWindow);
-            stub.registerClient(client);
+            ClientGroup clientGroup = stub.registerClient(client, "Pablo");
+            chatWindow.setClientGroup(clientGroup);
         } catch (Exception e) {
             e.printStackTrace();
         }

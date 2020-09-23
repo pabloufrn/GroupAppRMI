@@ -1,11 +1,16 @@
 package br.imd.ufrn.TwoClients.client.views;
 
+import br.imd.ufrn.TwoClients.server.interfaces.ClientGroup;
+import br.imd.ufrn.TwoClients.server.interfaces.ServerRemote;
+
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyledDocument;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
@@ -15,12 +20,18 @@ public class ChatWindow extends JFrame {
     private JButton sendButton;
     private JTextPane chatPane;
 
-    public ChatWindow(String title) {
-        super(title);
+    private ClientGroup clientGroup;
 
+    public ChatWindow(String title, ServerRemote stub) {
+        super(title);
+        this.stub = stub;
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setContentPane(chatPanel);
         this.pack();
+
+        // ----------------------------------------
+        // ------------ SETUP ---------------------
+        // ----------------------------------------
 
         writeChatMsg("Olá, seja bem vindo ao chat global.\n");
 
@@ -65,6 +76,17 @@ public class ChatWindow extends JFrame {
                 }
             }
         });
+        sendButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // botão clicado
+                clientGroup.sendMessage(msgInput.getText());
+            }
+        });
+    }
+
+    public void setClientGroup(ClientGroup clientGroup) {
+        this.clientGroup = clientGroup;
     }
 
     public void writeChatMsg(String msg) {
