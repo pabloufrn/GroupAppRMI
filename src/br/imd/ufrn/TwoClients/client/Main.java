@@ -2,7 +2,7 @@ package br.imd.ufrn.TwoClients.client;
 
 import br.imd.ufrn.TwoClients.client.controllers.Client;
 import br.imd.ufrn.TwoClients.client.views.ChatWindow;
-import br.imd.ufrn.TwoClients.server.interfaces.ClientGroup;
+import br.imd.ufrn.TwoClients.server.interfaces.ClientGroupRemote;
 import br.imd.ufrn.TwoClients.server.interfaces.ServerRemote;
 
 import java.net.MalformedURLException;
@@ -22,10 +22,10 @@ public class Main {
         try{
             Registry registry = LocateRegistry.getRegistry("25.97.85.1", 1010);
             ServerRemote stub = (ServerRemote) registry.lookup("MyServer");
-            ChatWindow chatWindow = new ChatWindow("Multichat", stub);
+            ChatWindow chatWindow = new ChatWindow("Multichat");
             chatWindow.setVisible(true);
             Client client = new Client(chatWindow);
-            ClientGroup clientGroup = stub.registerClient(client, "Pablo");
+            ClientGroupRemote clientGroup = stub.registerClient(client, "Pablo");
             chatWindow.setClientGroup(clientGroup);
         } catch (Exception e) {
             e.printStackTrace();

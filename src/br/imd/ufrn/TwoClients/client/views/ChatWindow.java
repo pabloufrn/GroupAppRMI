@@ -1,7 +1,6 @@
 package br.imd.ufrn.TwoClients.client.views;
 
-import br.imd.ufrn.TwoClients.server.interfaces.ClientGroup;
-import br.imd.ufrn.TwoClients.server.interfaces.ServerRemote;
+import br.imd.ufrn.TwoClients.server.interfaces.ClientGroupRemote;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -9,10 +8,9 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyledDocument;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.rmi.RemoteException;
 
 public class ChatWindow extends JFrame {
     private JPanel chatPanel;
@@ -20,11 +18,10 @@ public class ChatWindow extends JFrame {
     private JButton sendButton;
     private JTextPane chatPane;
 
-    private ClientGroup clientGroup;
+    private ClientGroupRemote clientGroup;
 
-    public ChatWindow(String title, ServerRemote stub) {
+    public ChatWindow(String title) {
         super(title);
-        this.stub = stub;
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setContentPane(chatPanel);
         this.pack();
@@ -76,16 +73,17 @@ public class ChatWindow extends JFrame {
                 }
             }
         });
-        sendButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // botão clicado
+        sendButton.addActionListener(e -> {
+            // botão clicado
+            try {
                 clientGroup.sendMessage(msgInput.getText());
+            } catch (RemoteException remoteException) {
+                remoteException.printStackTrace();
             }
         });
     }
 
-    public void setClientGroup(ClientGroup clientGroup) {
+    public void setClientGroup(ClientGroupRemote clientGroup) {
         this.clientGroup = clientGroup;
     }
 
