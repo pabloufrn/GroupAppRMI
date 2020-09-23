@@ -24,7 +24,7 @@ public class Server implements ServerRemote {
     }
 
     @Override
-    public ClientGroupRemote registerClient(ClientRemote client, String name) throws RemoteException {
+    public ClientGroupRemote registerClient(ClientRemote client) throws RemoteException {
         Group group;
         if(groups.isEmpty()){
             group = new Group();
