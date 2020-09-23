@@ -2,6 +2,7 @@ package br.imd.ufrn.TwoClients.server.controllers;
 
 import br.imd.ufrn.TwoClients.client.interfaces.ClientRemote;
 
+import java.rmi.RemoteException;
 import java.util.List;
 
 public class Group {
@@ -19,11 +20,19 @@ public class Group {
     }
 
     void addClient(ClientRemote client) {
+        //Fulano entrou no grupo
+        sendMessage(client.getName() + " entrou no grupo!");
         clients.add(client);
     }
 
     void sendMessage(String message) {
-        // TODO:
+        clients.forEach(cliente -> {
+            try {
+                cliente.receiveMessage(message);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
 }

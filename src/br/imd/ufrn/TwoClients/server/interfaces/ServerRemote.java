@@ -9,7 +9,7 @@ import br.imd.ufrn.TwoClients.client.interfaces.ClientRemote;
 
 public interface ServerRemote extends Remote {
 
-    void registerClient(ClientRemote client) throws RemoteException;
+    void registerClient(ClientRemote client, String name) throws RemoteException;
     List<Map.Entry<String, String>> listGroups() throws RemoteException;
 
 
