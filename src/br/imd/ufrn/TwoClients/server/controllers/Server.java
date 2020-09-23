@@ -1,12 +1,12 @@
 package br.imd.ufrn.TwoClients.server.controllers;
 
 import br.imd.ufrn.TwoClients.client.interfaces.ClientRemote;
+import br.imd.ufrn.TwoClients.server.interfaces.ClientGroupRemote;
 import br.imd.ufrn.TwoClients.server.interfaces.ServerRemote;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -24,15 +24,17 @@ public class Server implements ServerRemote {
     }
 
     @Override
-    public void registerClient(ClientRemote client, String name) throws RemoteException {
+    public ClientGroupRemote registerClient(ClientRemote client, String name) throws RemoteException {
+        Group group;
         if(groups.isEmpty()){
-            Group group = new Group();
-            group.addClient(client);
+            group = new Group();
             this.groups.add(group);
         } else {
-            this.groups.get(0).addClient(client);
+            group = this.groups.get(0);
         }
+        group.addClient(client);
         this.clients.add(client);
+        return new ClientGroup(client, group);
     }
 
     @Override
