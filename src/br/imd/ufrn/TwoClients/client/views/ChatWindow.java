@@ -73,6 +73,10 @@ public class ChatWindow extends JFrame {
                 }
             }
         });
+    }
+
+    public void setClientGroup(ClientGroupRemote clientGroup) {
+        this.clientGroup = clientGroup;
         sendButton.addActionListener(e -> {
             // botão clicado
             try {
@@ -81,10 +85,6 @@ public class ChatWindow extends JFrame {
                 remoteException.printStackTrace();
             }
         });
-    }
-
-    public void setClientGroup(ClientGroupRemote clientGroup) {
-        this.clientGroup = clientGroup;
     }
 
     public void writeChatMsg(String msg) {

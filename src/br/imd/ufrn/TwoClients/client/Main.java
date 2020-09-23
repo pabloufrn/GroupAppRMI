@@ -24,8 +24,8 @@ public class Main {
             ServerRemote stub = (ServerRemote) registry.lookup("MyServer");
             ChatWindow chatWindow = new ChatWindow("Multichat");
             chatWindow.setVisible(true);
-            Client client = new Client(chatWindow);
-            ClientGroupRemote clientGroup = stub.registerClient(client, "Pablo");
+            Client client = new Client(chatWindow, "Pablo");
+            ClientGroupRemote clientGroup = stub.registerClient(client);
             chatWindow.setClientGroup(clientGroup);
         } catch (Exception e) {
             e.printStackTrace();
