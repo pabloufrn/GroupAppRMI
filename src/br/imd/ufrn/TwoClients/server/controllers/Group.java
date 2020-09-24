@@ -34,12 +34,12 @@ public class Group implements GroupRemote {
     }
 
     public void addClient(ClientRemote client) {
+        clients.add(client);
         try {
             sendMessage(client.getName() + " entrou no grupo!");
         } catch (RemoteException e) {
             e.printStackTrace();
         }
-        clients.add(client);
     }
 
     public void removeClient(ClientRemote client) {
