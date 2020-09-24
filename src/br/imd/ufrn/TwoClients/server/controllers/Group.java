@@ -1,12 +1,13 @@
 package br.imd.ufrn.TwoClients.server.controllers;
 
 import br.imd.ufrn.TwoClients.client.interfaces.ClientRemote;
+import br.imd.ufrn.TwoClients.server.interfaces.GroupRemote;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Group {
+public class Group implements GroupRemote {
 
     private final Integer id;
     private final String name;
@@ -20,10 +21,12 @@ public class Group {
         this.clients = new ArrayList<>();
     }
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public Integer getId() {
         return id;
     }

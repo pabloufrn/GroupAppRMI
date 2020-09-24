@@ -2,6 +2,7 @@ package br.imd.ufrn.TwoClients.server.controllers;
 
 import br.imd.ufrn.TwoClients.client.interfaces.ClientRemote;
 import br.imd.ufrn.TwoClients.server.interfaces.ClientGroupRemote;
+import br.imd.ufrn.TwoClients.server.interfaces.GroupRemote;
 import br.imd.ufrn.TwoClients.server.interfaces.ServerRemote;
 
 import java.rmi.RemoteException;
@@ -42,9 +43,8 @@ public class Server implements ServerRemote {
     }
 
     @Override
-    public List<Map.Entry<Integer, String>> listGroups() throws RemoteException {
-        return groups.stream().map(group ->
-                Map.entry(group.getId(), group.getName())).collect(Collectors.toList());
+    public List<GroupRemote> listGroups() throws RemoteException {
+        return groups.stream().map(group -> (GroupRemote) group).collect(Collectors.toList());
     }
 
     public void removeGroup(Group group) {

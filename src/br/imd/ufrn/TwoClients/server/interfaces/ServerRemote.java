@@ -11,7 +11,7 @@ public interface ServerRemote extends Remote {
 
     ClientGroupRemote enterGroup(Integer id, ClientRemote client) throws RemoteException;
     ClientGroupRemote createGroup(String name, ClientRemote client) throws RemoteException;
-    List<Map.Entry<Integer, String>> listGroups() throws RemoteException;
+    List<GroupRemote> listGroups() throws RemoteException;
 
 
     // stub.connect(client) | cliente
