@@ -5,14 +5,14 @@ import br.imd.ufrn.TwoClients.client.views.ChatWindow;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.List;
 
 public class Client implements ClientRemote {
 
     private ChatWindow window;
     private String name;
 
-    public Client(ChatWindow window, String name) {
-        this.window = window;
+    public Client(String name) {
         this.name = name;
         this.exportService();
     }
