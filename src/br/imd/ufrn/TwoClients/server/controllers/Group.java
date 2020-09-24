@@ -7,12 +7,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Group {
-    // pega a lista de cliente e manda uma mensagem para cada um
 
-    private String name;
+    private final Integer id;
+    private final String name;
+    private final Server server;
     private final List<ClientRemote> clients;
 
-    public Group() {
+    public Group(Integer id, String name, Server server) {
+        this.name = name;
+        this.id = id;
+        this.server = server;
         this.clients = new ArrayList<>();
     }
 
@@ -20,12 +24,11 @@ public class Group {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public Integer getId() {
+        return id;
     }
 
-    void addClient(ClientRemote client) {
-        //Fulano entrou no grupo
+    public void addClient(ClientRemote client) {
         try {
             sendMessage(client.getName() + " entrou no grupo!");
         } catch (RemoteException e) {
@@ -34,7 +37,21 @@ public class Group {
         clients.add(client);
     }
 
-    void sendMessage(String message) {
+    public void removeClient(ClientRemote client) {
+        this.clients.remove(client);
+        if(clients.size() == 0){
+            this.server.removeGroup(this);
+        }
+        else {
+            try {
+                sendMessage(client.getName() + " saiu do grupo!");
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void sendMessage(String message) {
         clients.forEach(cliente -> {
             try {
                 cliente.receiveMessage(message);
@@ -43,5 +60,4 @@ public class Group {
             }
         });
     }
-
 }

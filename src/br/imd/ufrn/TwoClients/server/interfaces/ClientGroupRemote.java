@@ -11,4 +11,5 @@ public interface ClientGroupRemote extends Remote {
 
     // group.sendMsg("nome:" + "msg")
     void sendMessage(String msg) throws RemoteException;
+    void leaveGroup() throws RemoteException;
 }

@@ -9,39 +9,45 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class Server implements ServerRemote {
 
-//    ClientRemote client;
-    List<ClientRemote> clients;
     List<Group> groups;
+    Integer nextId;
 
     public Server() throws RemoteException {
-        UnicastRemoteObject.exportObject(this, 1010);
-        this.clients = new ArrayList<>();
+        this.nextId = 0;
         this.groups = new ArrayList<>();
+        UnicastRemoteObject.exportObject(this, 1010);
     }
 
     @Override
-    public ClientGroupRemote registerClient(ClientRemote client) throws RemoteException {
-        Group group;
-        if(groups.isEmpty()){
-            group = new Group();
-            this.groups.add(group);
-        } else {
-            group = this.groups.get(0);
+    public ClientGroupRemote enterGroup(Integer id, ClientRemote client) throws RemoteException{
+        Optional<Group> groupOpt = groups.stream().filter(group -> group.getId().equals(id)).findAny();
+        if(groupOpt.isEmpty()){
+            return null;
         }
+        Group group = groupOpt.get();
         group.addClient(client);
-        this.clients.add(client);
         return new ClientGroup(client, group);
     }
 
     @Override
-    public List<Map.Entry<String, String>> listGroups() throws RemoteException {
-        return groups.stream().map(group ->
-                Map.entry("fwef", "fwefw")).collect(Collectors.toList());
+    public ClientGroupRemote createGroup(String name, ClientRemote client) throws RemoteException{
+        Group group = new Group(nextId++, name, this);
+        this.groups.add(group);
+        return enterGroup(group.getId(), client);
     }
 
+    @Override
+    public List<Map.Entry<Integer, String>> listGroups() throws RemoteException {
+        return groups.stream().map(group ->
+                Map.entry(group.getId(), group.getName())).collect(Collectors.toList());
+    }
 
+    public void removeGroup(Group group) {
+        this.groups.remove(group);
+    }
 }

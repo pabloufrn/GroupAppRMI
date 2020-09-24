@@ -9,8 +9,9 @@ import br.imd.ufrn.TwoClients.client.interfaces.ClientRemote;
 
 public interface ServerRemote extends Remote {
 
-    ClientGroupRemote registerClient(ClientRemote client) throws RemoteException;
-    List<Map.Entry<String, String>> listGroups() throws RemoteException;
+    ClientGroupRemote enterGroup(Integer id, ClientRemote client) throws RemoteException;
+    ClientGroupRemote createGroup(String name, ClientRemote client) throws RemoteException;
+    List<Map.Entry<Integer, String>> listGroups() throws RemoteException;
 
 
     // stub.connect(client) | cliente

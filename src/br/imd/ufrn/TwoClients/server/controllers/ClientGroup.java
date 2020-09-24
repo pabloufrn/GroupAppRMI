@@ -1,6 +1,5 @@
 package br.imd.ufrn.TwoClients.server.controllers;
 
-import br.imd.ufrn.TwoClients.client.controllers.Client;
 import br.imd.ufrn.TwoClients.client.interfaces.ClientRemote;
 import br.imd.ufrn.TwoClients.server.interfaces.ClientGroupRemote;
 
@@ -20,5 +19,10 @@ public class ClientGroup implements ClientGroupRemote {
     @Override
     public void sendMessage(String msg) throws RemoteException {
         group.sendMessage(client.getName() + ": " + msg);
+    }
+
+    @Override
+    public void leaveGroup() throws RemoteException {
+        this.group.removeClient(client);
     }
 }
