@@ -1,9 +1,6 @@
 package br.imd.ufrn.TwoClients.client;
 
-import br.imd.ufrn.TwoClients.client.controllers.Client;
-import br.imd.ufrn.TwoClients.client.views.ChatWindow;
 import br.imd.ufrn.TwoClients.client.views.MainWindow;
-import br.imd.ufrn.TwoClients.server.interfaces.ClientGroupRemote;
 import br.imd.ufrn.TwoClients.server.interfaces.ServerRemote;
 
 import java.net.MalformedURLException;
@@ -27,7 +24,8 @@ public class Main {
 //            chatWindow.setVisible(true);
 //            Client client = new Client(chatWindow, "Pablo");
 //            Client client = new Client(chatWindow, "Pablo");
-//            ClientGroupRemote clientGroup = stub.registerClient(client);
+//            ClientGroupRemote clientGroup = stub
+//            ♦.registerClient(client);
 //            chatWindow.setClientGroup(clientGroup);
         } catch (Exception e) {
             e.printStackTrace();

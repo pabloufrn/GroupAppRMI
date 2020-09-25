@@ -8,13 +8,10 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyledDocument;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 import java.rmi.RemoteException;
 
-public class ChatWindow extends JFrame {
+public class ChatWindow extends JDialog {
     private JPanel chatPanel;
     private JTextField msgInput;
     private JButton sendButton;
@@ -22,11 +19,17 @@ public class ChatWindow extends JFrame {
 
     private ClientGroupRemote clientGroup;
 
-    public ChatWindow(String title) {
-        super(title);
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+    public ChatWindow(JFrame parentWindow) {
+//        super(title);
+//        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+//        this.setContentPane(chatPanel);
+        super(parentWindow);
+        this.setModal(true);
+        this.setLocationRelativeTo(parentWindow);
         this.setContentPane(chatPanel);
         this.pack();
+
+        this.clientGroup = clientGroup;
 
         // ----------------------------------------
         // ------------ SETUP ---------------------
@@ -42,6 +45,24 @@ public class ChatWindow extends JFrame {
         // ----------------------------------------
         // ----------- EVENTOS --------------------
         // ----------------------------------------
+//        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        this.addWindowListener(new WindowListener() {
+            @Override public void windowOpened(WindowEvent e) { }
+            @Override
+            public void windowClosing(WindowEvent e) {
+                try {
+                    ChatWindow.this.clientGroup.leaveGroup();
+                } catch (RemoteException remoteException) {
+                    remoteException.printStackTrace();
+                }
+            }
+            @Override public void windowClosed(WindowEvent e) { }
+            @Override public void windowIconified(WindowEvent e) { }
+            @Override public void windowDeiconified(WindowEvent e) { }
+            @Override public void windowActivated(WindowEvent e) { }
+            @Override public void windowDeactivated(WindowEvent e) { }
+        });
+
         msgInput.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -64,13 +85,8 @@ public class ChatWindow extends JFrame {
                 System.out.println("dwfew");
                 if(!msgInput.getText().trim().isBlank())
                     sendChatMsg();
-
             }
         });
-    }
-
-    public void setClientGroup(ClientGroupRemote clientGroup) {
-        this.clientGroup = clientGroup;
         sendButton.addActionListener(e -> {
             // botão clicado
             sendChatMsg();
@@ -88,11 +104,14 @@ public class ChatWindow extends JFrame {
     }
     public void sendChatMsg() {
         try {
-            clientGroup.sendMessage(msgInput.getText());
+            this.clientGroup.sendMessage(msgInput.getText());
             sendButton.setEnabled(false);
             msgInput.setText("");
         } catch (RemoteException remoteException) {
             remoteException.printStackTrace();
         }
+    }
+    public void setClientGroup(ClientGroupRemote clientGroup) {
+        this.clientGroup = clientGroup;
     }
 }

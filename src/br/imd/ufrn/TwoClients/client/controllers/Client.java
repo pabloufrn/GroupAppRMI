@@ -5,7 +5,6 @@ import br.imd.ufrn.TwoClients.client.views.ChatWindow;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.List;
 
 public class Client implements ClientRemote {
 
@@ -41,6 +40,11 @@ public class Client implements ClientRemote {
 
     @Override
     public void receiveMessage(String message) throws RemoteException {
-        window.writeChatMsg(message);
+        this.window.writeChatMsg(message);
     }
+
+    public void setWindow(ChatWindow chatWindow) {
+        this.window = chatWindow;
+    }
+
 }

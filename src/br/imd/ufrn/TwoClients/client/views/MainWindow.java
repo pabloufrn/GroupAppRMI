@@ -1,7 +1,6 @@
 package br.imd.ufrn.TwoClients.client.views;
 
 import br.imd.ufrn.TwoClients.client.controllers.Client;
-import br.imd.ufrn.TwoClients.client.interfaces.ClientRemote;
 import br.imd.ufrn.TwoClients.server.interfaces.ClientGroupRemote;
 import br.imd.ufrn.TwoClients.server.interfaces.GroupRemote;
 import br.imd.ufrn.TwoClients.server.interfaces.ServerRemote;
@@ -11,24 +10,24 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.rmi.RemoteException;
 import java.util.List;
-import java.util.Map;
-import java.util.Vector;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class MainWindow extends JFrame implements ListSelectionListener {
     private JList gList;
     private JPanel mainPane;
     private JButton joinButton;
-    private JButton novoGrupoButton;
+    private JButton createGroupButton;
+    private DefaultListModel listModel;
 
     private List<GroupRemote> groups;
     private Integer selectedGroup;
     Client client;
 
-    ServerRemote  stub;
+    ServerRemote stub;
 
     public MainWindow(String title, ServerRemote stub) {
         super(title);
@@ -38,7 +37,7 @@ public class MainWindow extends JFrame implements ListSelectionListener {
         this.pack();
         selectedGroup = -1;
 
-        DefaultListModel listModel = new DefaultListModel();
+        listModel = new DefaultListModel();
         gList.setModel(listModel);
 
         gList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -46,24 +45,41 @@ public class MainWindow extends JFrame implements ListSelectionListener {
         gList.addListSelectionListener(this);
         gList.setVisibleRowCount(5);
 
-        ClientRemote client =  new Client("Pablo");
+        this.client = new Client("Pablo");
 
-        try {
-            stub.createGroup("dwe", client);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            stub.createGroup("dwe", client);
+//        } catch (RemoteException e) {
+//            e.printStackTrace();
+//        }
 
         // -------------------------------------------
         // --------------- CARREGAR ------------------
         // -------------------------------------------
         try {
             groups = stub.listGroups();
-            System.out.println(groups);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
-        listModel.addAll(
+        this.refreshGroups();
+        joinButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                joinSelectedGroup();
+            }
+        });
+        createGroupButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String name = JOptionPane.showInputDialog("Digite o novo do grupo:");
+                createGroup(name);
+            }
+        });
+    }
+
+    private void refreshGroups() {
+        this.listModel.clear();
+        this.listModel.addAll(
                 groups.stream().map(group -> {
                     try {
                         return group.getName();
@@ -73,36 +89,62 @@ public class MainWindow extends JFrame implements ListSelectionListener {
                     }
                 }).collect(Collectors.toList())
         );
-        joinButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("join - " + e.getActionCommand());
-                joinSelectedGroup();
-            }
-        });
     }
 
     @Override
     public void valueChanged(ListSelectionEvent e) {
-        if (e.getValueIsAdjusting() == false) {
+        if (e.getValueIsAdjusting() == false && gList.getSelectedIndex() != -1) {
             Integer newSelectedGroup = null;
             try {
                 newSelectedGroup = groups.get(gList.getSelectedIndex()).getId();
             } catch (RemoteException remoteException) {
                 remoteException.printStackTrace();
             }
-            if(newSelectedGroup == selectedGroup) {
+            if (newSelectedGroup == selectedGroup) {
                 joinSelectedGroup();
             } else {
                 selectedGroup = newSelectedGroup;
             }
         }
     }
+
     public void joinSelectedGroup() {
+        ChatWindow chatWindow = createChatWindow();
         try {
-            stub.enterGroup(selectedGroup, client);
+            client.setWindow(chatWindow);
+            ClientGroupRemote clientGroup = stub.enterGroup(selectedGroup, client);
+            chatWindow.setClientGroup(clientGroup);
+            chatWindow.setVisible(true);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
+    }
+
+    private ChatWindow createChatWindow() {
+        ChatWindow chatWindow = new ChatWindow(this);
+        client.setWindow(chatWindow);
+        chatWindow.addWindowListener(new WindowListener() {
+            @Override public void windowOpened(WindowEvent e) { }
+            @Override public void windowClosing(WindowEvent e) {
+                MainWindow.this.refreshGroups();
+            }
+            @Override public void windowClosed(WindowEvent e) { }
+            @Override public void windowIconified(WindowEvent e) { }
+            @Override public void windowDeiconified(WindowEvent e) { }
+            @Override public void windowActivated(WindowEvent e) { }
+            @Override public void windowDeactivated(WindowEvent e) { }
+        });
+        return chatWindow;
+    }
+    private void createGroup(String name) {
+
+        ChatWindow chatWindow = createChatWindow();
+        try {
+            ClientGroupRemote clientGroup = stub.createGroup(name, client);
+            chatWindow.setClientGroup(clientGroup);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        chatWindow.setVisible(true);
     }
 }
