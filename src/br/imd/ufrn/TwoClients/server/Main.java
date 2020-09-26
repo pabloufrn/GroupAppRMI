@@ -9,7 +9,7 @@ public class Main {
 
     public static void main(String[] args) {
         try {
-            System.setProperty("java.rmi.server.hostname","25.97.85.1");
+            //System.setProperty("java.rmi.server.hostname","25.97.85.1");
             Registry registry = LocateRegistry.createRegistry(1010);
             registry.bind("MyServer", new Server());
             System.err.println("Server ready");

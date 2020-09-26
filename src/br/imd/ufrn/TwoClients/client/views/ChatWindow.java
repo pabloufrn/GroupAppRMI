@@ -29,8 +29,6 @@ public class ChatWindow extends JDialog {
         this.setContentPane(chatPanel);
         this.pack();
 
-        this.clientGroup = clientGroup;
-
         // ----------------------------------------
         // ------------ SETUP ---------------------
         // ----------------------------------------
@@ -46,7 +44,7 @@ public class ChatWindow extends JDialog {
         // ----------- EVENTOS --------------------
         // ----------------------------------------
 //        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        this.addWindowListener(new WindowListener() {
+        this.addWindowListener(new WindowAdapter() {
             @Override public void windowOpened(WindowEvent e) { }
             @Override
             public void windowClosing(WindowEvent e) {
@@ -56,11 +54,6 @@ public class ChatWindow extends JDialog {
                     remoteException.printStackTrace();
                 }
             }
-            @Override public void windowClosed(WindowEvent e) { }
-            @Override public void windowIconified(WindowEvent e) { }
-            @Override public void windowDeiconified(WindowEvent e) { }
-            @Override public void windowActivated(WindowEvent e) { }
-            @Override public void windowDeactivated(WindowEvent e) { }
         });
 
         msgInput.getDocument().addDocumentListener(new DocumentListener() {
