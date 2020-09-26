@@ -17,11 +17,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class MainWindow extends JFrame implements ListSelectionListener {
-    private JList gList;
+    private JList<String> gList;
     private JPanel mainPane;
     private JButton joinButton;
     private JButton createGroupButton;
-    private DefaultListModel listModel;
+    private final DefaultListModel<String> listModel;
 
     private List<GroupRemote> groups;
     private Integer selectedGroup;
@@ -37,7 +37,7 @@ public class MainWindow extends JFrame implements ListSelectionListener {
         this.pack();
         selectedGroup = -1;
 
-        listModel = new DefaultListModel();
+        listModel = new DefaultListModel<>();
         gList.setModel(listModel);
 
         gList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -56,11 +56,6 @@ public class MainWindow extends JFrame implements ListSelectionListener {
         // -------------------------------------------
         // --------------- CARREGAR ------------------
         // -------------------------------------------
-        try {
-            groups = stub.listGroups();
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
         this.refreshGroups();
         joinButton.addActionListener(new ActionListener() {
             @Override
@@ -71,13 +66,18 @@ public class MainWindow extends JFrame implements ListSelectionListener {
         createGroupButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String name = JOptionPane.showInputDialog("Digite o novo do grupo:");
+                String name = JOptionPane.showInputDialog("Digite o nome do grupo:");
                 createGroup(name);
             }
         });
     }
 
     private void refreshGroups() {
+        try {
+            groups = stub.listGroups();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
         this.listModel.clear();
         this.listModel.addAll(
                 groups.stream().map(group -> {
@@ -113,6 +113,11 @@ public class MainWindow extends JFrame implements ListSelectionListener {
         try {
             client.setWindow(chatWindow);
             ClientGroupRemote clientGroup = stub.enterGroup(selectedGroup, client);
+            if(clientGroup == null){
+                System.out.println("Grupo não existe");
+                this.refreshGroups();
+                return;
+            }
             chatWindow.setClientGroup(clientGroup);
             chatWindow.setVisible(true);
         } catch (RemoteException e) {
