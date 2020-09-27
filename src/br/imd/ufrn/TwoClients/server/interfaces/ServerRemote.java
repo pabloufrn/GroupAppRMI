@@ -13,6 +13,7 @@ public interface ServerRemote extends Remote {
 
     void conectListener(GroupsListenerRemote listener) throws RemoteException;
     void disconectListener(GroupsListenerRemote listener) throws RemoteException;
+    List<GroupRemote> listGroups() throws RemoteException;
     ClientGroupRemote enterGroup(Integer id, ClientRemote client) throws RemoteException;
     ClientGroupRemote createGroup(String name, ClientRemote client) throws RemoteException;
 

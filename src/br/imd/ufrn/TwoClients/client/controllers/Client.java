@@ -11,8 +11,7 @@ public class Client implements ClientRemote {
     private ChatWindow window;
     private String name;
 
-    public Client(String name) {
-        this.name = name;
+    public Client() {
         this.exportService();
     }
 
@@ -36,6 +35,10 @@ public class Client implements ClientRemote {
     @Override
     public String getName() {
         return this.name;
+    }
+
+    public void setName(String name){
+        this.name = name;
     }
 
     @Override

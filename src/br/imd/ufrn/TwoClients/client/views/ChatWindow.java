@@ -33,7 +33,6 @@ public class ChatWindow extends JDialog {
         // ------------ SETUP ---------------------
         // ----------------------------------------
 
-        writeChatMsg("Olá, seja bem vindo ao chat global.\n");
 
         // ----------------------------------------
         // ------------ PROPS ---------------------

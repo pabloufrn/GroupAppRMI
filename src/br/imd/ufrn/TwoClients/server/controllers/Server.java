@@ -55,6 +55,11 @@ public class Server implements ServerRemote {
         return enterGroup(group.getId(), client);
     }
 
+    @Override
+    public List<GroupRemote> listGroups() {
+        return groups.stream().map(group -> (GroupRemote) group).collect(Collectors.toList());
+    }
+
     public void removeGroup(Group group) {
         this.groups.remove(group);
         this.notifyGroupsChanges();
@@ -68,9 +73,5 @@ public class Server implements ServerRemote {
                 e.printStackTrace();
             }
         });
-    }
-
-    private List<GroupRemote> listGroups() {
-        return groups.stream().map(group -> (GroupRemote) group).collect(Collectors.toList());
     }
 }
