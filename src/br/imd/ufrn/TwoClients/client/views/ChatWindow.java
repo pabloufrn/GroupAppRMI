@@ -25,9 +25,9 @@ public class ChatWindow extends JDialog {
 //        this.setContentPane(chatPanel);
         super(parentWindow);
         this.setModal(true);
-        this.setLocationRelativeTo(parentWindow);
         this.setContentPane(chatPanel);
         this.pack();
+        this.setLocationRelativeTo(parentWindow);
 
         // ----------------------------------------
         // ------------ SETUP ---------------------
